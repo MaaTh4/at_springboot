@@ -1,0 +1,74 @@
+### 1. Criar um novo usuário de segurança (Guilda)
+POST http://localhost:8080/seguranca/usuarios
+Content-Type: application/json
+
+{
+    "username": "mestre_guilda",
+    "password": "senha_super_secreta",
+    "roles": ["ADMIN"]
+}
+
+###
+
+### 2. Listar Usuários
+GET http://localhost:8080/seguranca/usuarios
+
+###
+
+### 3. Registrar um Aventureiro (CRUD Guilda)
+POST http://localhost:8080/aventureiros
+Content-Type: application/json
+
+{
+    "nome": "Gimli do Machado Forte",
+    "classe": "GUERREIRO",
+    "nivel": 10
+}
+
+###
+
+### 4. Listar Aventureiros
+GET http://localhost:8080/aventureiros
+
+###
+
+### 5. Buscar Aventureiro por ID (Substitua {id} pelo ID retornado acima)
+GET http://localhost:8080/aventureiros/1
+
+###
+
+### 6. Atualizar Aventureiro
+PUT http://localhost:8080/aventureiros/1
+Content-Type: application/json
+
+{
+    "nome": "Gimli do Machado de Fogo",
+    "classe": "GUERREIRO",
+    "nivel": 11
+}
+
+###
+
+### 7. Definir Companheiro para Aventureiro
+PUT http://localhost:8080/aventureiros/1/companheiro
+Content-Type: application/json
+
+{
+    "nome": "Lobo Prateado",
+    "especie": "ANIMAL"
+}
+
+###
+
+### 8. Listar Missões
+GET http://localhost:8080/missoes?status=EM_ANDAMENTO
+
+###
+
+### 9. Obter Ranking de Aventureiros
+GET http://localhost:8080/relatorios/ranking-aventureiros
+
+###
+
+### 10. Obter Métricas de Missões
+GET http://localhost:8080/relatorios/missoes-metricas
