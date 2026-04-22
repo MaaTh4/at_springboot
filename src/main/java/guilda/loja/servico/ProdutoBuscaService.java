@@ -108,24 +108,19 @@ public class ProdutoBuscaService {
             org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations eAgg = (org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations) hits
                     .getAggregations();
             
-            Object objRaw = eAgg.aggregationsAsMap().get("agreg_cat").aggregation();
-            if (objRaw instanceof co.elastic.clients.elasticsearch._types.aggregations.Aggregate) {
-                co.elastic.clients.elasticsearch._types.aggregations.Aggregate aggregate = (co.elastic.clients.elasticsearch._types.aggregations.Aggregate) objRaw;
-                if (aggregate != null && aggregate.isSterms()) {
-                    for (StringTermsBucket bucket : aggregate.sterms().buckets().array()) {
-                        result.put(bucket.key().stringValue(), bucket.docCount());
-                    }
-                }
-            } else {
-                // Tenta bypass caso sua IDE exija a versão .getAggregate() que você possuía
-                try {
-                    co.elastic.clients.elasticsearch._types.aggregations.Aggregate extractedAgg = (co.elastic.clients.elasticsearch._types.aggregations.Aggregate) objRaw.getClass().getMethod("getAggregate").invoke(objRaw);
-                    if (extractedAgg != null && extractedAgg.isSterms()) {
-                        for (StringTermsBucket bucket : extractedAgg.sterms().buckets().array()) {
+            org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation aggregation = 
+                    (org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation) eAgg.aggregationsAsMap().get("agreg_cat");
+                    
+            if (aggregation != null) {
+                org.springframework.data.elasticsearch.client.elc.Aggregation elcAgg = aggregation.aggregation();
+                if (elcAgg != null && elcAgg.getAggregate() != null) {
+                    co.elastic.clients.elasticsearch._types.aggregations.Aggregate aggregate = elcAgg.getAggregate();
+                    if (aggregate.isSterms()) {
+                        for (StringTermsBucket bucket : aggregate.sterms().buckets().array()) {
                             result.put(bucket.key().stringValue(), bucket.docCount());
                         }
                     }
-                } catch (Exception e) {}
+                }
             }
         }
         return result;
@@ -142,23 +137,19 @@ public class ProdutoBuscaService {
             org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations eAgg = (org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations) hits
                     .getAggregations();
 
-            Object objRaw = eAgg.aggregationsAsMap().get("agreg_raridade").aggregation();
-            if (objRaw instanceof co.elastic.clients.elasticsearch._types.aggregations.Aggregate) {
-                co.elastic.clients.elasticsearch._types.aggregations.Aggregate aggregate = (co.elastic.clients.elasticsearch._types.aggregations.Aggregate) objRaw;
-                if (aggregate != null && aggregate.isSterms()) {
-                    for (StringTermsBucket bucket : aggregate.sterms().buckets().array()) {
-                        result.put(bucket.key().stringValue(), bucket.docCount());
-                    }
-                }
-            } else {
-                try {
-                    co.elastic.clients.elasticsearch._types.aggregations.Aggregate extractedAgg = (co.elastic.clients.elasticsearch._types.aggregations.Aggregate) objRaw.getClass().getMethod("getAggregate").invoke(objRaw);
-                    if (extractedAgg != null && extractedAgg.isSterms()) {
-                        for (StringTermsBucket bucket : extractedAgg.sterms().buckets().array()) {
+            org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation aggregation = 
+                    (org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation) eAgg.aggregationsAsMap().get("agreg_raridade");
+                    
+            if (aggregation != null) {
+                org.springframework.data.elasticsearch.client.elc.Aggregation elcAgg = aggregation.aggregation();
+                if (elcAgg != null && elcAgg.getAggregate() != null) {
+                    co.elastic.clients.elasticsearch._types.aggregations.Aggregate aggregate = elcAgg.getAggregate();
+                    if (aggregate.isSterms()) {
+                        for (StringTermsBucket bucket : aggregate.sterms().buckets().array()) {
                             result.put(bucket.key().stringValue(), bucket.docCount());
                         }
                     }
-                } catch (Exception e) {}
+                }
             }
         }
         return result;
@@ -174,15 +165,17 @@ public class ProdutoBuscaService {
             org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations eAgg = (org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations) hits
                     .getAggregations();
 
-            Object objRaw = eAgg.aggregationsAsMap().get("agreg_avg").aggregation();
-            if (objRaw instanceof co.elastic.clients.elasticsearch._types.aggregations.Aggregate) {
-                co.elastic.clients.elasticsearch._types.aggregations.Aggregate aggregate = (co.elastic.clients.elasticsearch._types.aggregations.Aggregate) objRaw;
-                if (aggregate != null && aggregate.isAvg()) return aggregate.avg().value();
-            } else {
-                try {
-                    co.elastic.clients.elasticsearch._types.aggregations.Aggregate extractedAgg = (co.elastic.clients.elasticsearch._types.aggregations.Aggregate) objRaw.getClass().getMethod("getAggregate").invoke(objRaw);
-                    if (extractedAgg != null && extractedAgg.isAvg()) return extractedAgg.avg().value();
-                } catch (Exception e) {}
+            org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation aggregation = 
+                    (org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation) eAgg.aggregationsAsMap().get("agreg_avg");
+                    
+            if (aggregation != null) {
+                org.springframework.data.elasticsearch.client.elc.Aggregation elcAgg = aggregation.aggregation();
+                if (elcAgg != null && elcAgg.getAggregate() != null) {
+                    co.elastic.clients.elasticsearch._types.aggregations.Aggregate aggregate = elcAgg.getAggregate();
+                    if (aggregate.isAvg()) {
+                        return aggregate.avg().value();
+                    }
+                }
             }
         }
         return 0.0;
@@ -204,23 +197,19 @@ public class ProdutoBuscaService {
             org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations eAgg = (org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations) hits
                     .getAggregations();
 
-            Object objRaw = eAgg.aggregationsAsMap().get("agreg_ranges").aggregation();
-            if (objRaw instanceof co.elastic.clients.elasticsearch._types.aggregations.Aggregate) {
-                co.elastic.clients.elasticsearch._types.aggregations.Aggregate aggregate = (co.elastic.clients.elasticsearch._types.aggregations.Aggregate) objRaw;
-                if (aggregate != null && aggregate.isRange()) {
-                    for (RangeBucket bucket : aggregate.range().buckets().array()) {
-                        result.put(bucket.key(), bucket.docCount());
-                    }
-                }
-            } else {
-                try {
-                    co.elastic.clients.elasticsearch._types.aggregations.Aggregate extractedAgg = (co.elastic.clients.elasticsearch._types.aggregations.Aggregate) objRaw.getClass().getMethod("getAggregate").invoke(objRaw);
-                    if (extractedAgg != null && extractedAgg.isRange()) {
-                        for (RangeBucket bucket : extractedAgg.range().buckets().array()) {
+            org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation aggregation = 
+                    (org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation) eAgg.aggregationsAsMap().get("agreg_ranges");
+                    
+            if (aggregation != null) {
+                org.springframework.data.elasticsearch.client.elc.Aggregation elcAgg = aggregation.aggregation();
+                if (elcAgg != null && elcAgg.getAggregate() != null) {
+                    co.elastic.clients.elasticsearch._types.aggregations.Aggregate aggregate = elcAgg.getAggregate();
+                    if (aggregate.isRange()) {
+                        for (RangeBucket bucket : aggregate.range().buckets().array()) {
                             result.put(bucket.key(), bucket.docCount());
                         }
                     }
-                } catch (Exception e) {}
+                }
             }
         }
         return result;
